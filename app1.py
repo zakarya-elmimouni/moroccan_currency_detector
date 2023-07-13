@@ -20,11 +20,12 @@ vidFrame.pack()
 vid=ctk.CTkLabel(vidFrame)
 vid.pack()
 
+#le modèle est entrainé sur google collab, j'ai donc enregistré le fichier last.pt qui comporte les poids et je l'ai mis sur le dossier
 
-model=torch.hub.load('ultralytics/yolov5','custom',path=r"C:\Users\Hp\Desktop\mes projets\reconnaissance de monnaie\built_app\yolov5\runs\train\exp4\weights\last.pt" ,
+model=torch.hub.load('ultralytics/yolov5','custom',path="last.pt" ,
                       force_reload=True)
 
-cap=cv2.VideoCapture(0)
+cap=cv2.VideoCapture(0) #connexion à ma camera
 
 
 def detect():
