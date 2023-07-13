@@ -15,16 +15,16 @@ app.geometry('600x600')
 app.title('recognize currency')
 ctk.set_appearance_mode('dark')
 
-vidFrame=tk.Frame(height=480,width=600)
+vidFrame=tk.Frame(height=480,width=600) #create the container where the vedio will be displayed
 vidFrame.pack()
 vid=ctk.CTkLabel(vidFrame)
 vid.pack()
 
 #le modèle est entrainé sur google collab, j'ai donc enregistré le fichier last.pt qui comporte les poids et je l'ai mis sur le dossier
-
-model=torch.hub.load('ultralytics/yolov5','custom',path="last.pt" ,
+#it loads the file rom github
+model=torch.hub.load('ultralytics/yolov5','custom',path=r"C:\Users\Hp\Desktop\mes projets\reconnaissance de monnaie\built_app\moroccan_currency_detector\yolov5\runs\train\exp4\weights\last.pt" ,
                       force_reload=True)
-
+#force_reload=True is used to force the system to reload the file even if it was already installed
 cap=cv2.VideoCapture(0) #connexion à ma camera
 
 
@@ -35,7 +35,7 @@ def detect():
     img=np.squeeze(results.render())
     imgarr=Image.fromarray(img)
     imgtk=ImageTk.PhotoImage(imgarr)
-    vid.imgtk=imgtk
+    vid.imgtk=imgtk  #associate the imgtk image with the vid object.
     vid.configure(image=imgtk)
     vid.after(10,detect)
 
