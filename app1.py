@@ -44,18 +44,17 @@ def detect():
     ret, frame=cap.read()
     frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
     results=model(frame)
-
+    img=np.squeeze(results.render())
 
     #print(len(results.xywh[0]))
     #print(results.xywh[0])
     if len(results.xywh[0])>0:
         precision=results.xywh[0][0][4]
         classe=results.xywh[0][0][5]
-        if precision.items()>=0.1 and classe.items()==2.0:
-            p=vlc.MediaPlayer("mixkit-classic-alarm-995.wav")
+        if precision.item()>=0.1 and classe.item()==2.0:
+            p=vlc.MediaPlayer(r"C:\Users\Hp\Desktop\mes projets\reconnaissance de monnaie\built_app\moroccan_currency_detector\mixkit-classic-alarm-995.wav")
             p.play()
             counter+=1
-    img=np.squeeze(results.render())
     imgarr=Image.fromarray(img)
     imgtk=ImageTk.PhotoImage(imgarr)
     vid.imgtk=imgtk  #associate the imgtk image with the vid object.
