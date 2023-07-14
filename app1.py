@@ -7,7 +7,7 @@ import numpy as np
 
 import cv2
 from PIL import Image, ImageTk
-#import vlc
+import vlc
 
 #create app
 app=tk.Tk()
@@ -27,17 +27,41 @@ model=torch.hub.load('ultralytics/yolov5','custom',path=r"C:\Users\Hp\Desktop\me
 #force_reload=True is used to force the system to reload the file even if it was already installed
 cap=cv2.VideoCapture(0) #connexion à ma camera
 
+counter=0
+counterlabel=ctk.CTkLabel(app,height=40,width=120,text=counter)
+counterlabel.pack()
+
+def reset_counter():
+    global counter
+    counter=0
+resetbutton=ctk.CTkButton(app,height=40,width=120,text='reset counter',command=reset_counter)
+resetbutton.pack()
+
+
 
 def detect():
+    global counter
     ret, frame=cap.read()
     frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
     results=model(frame)
+
+
+    #print(len(results.xywh[0]))
+    #print(results.xywh[0])
+    if len(results.xywh[0])>0:
+        precision=results.xywh[0][0][4]
+        classe=results.xywh[0][0][5]
+        if precision.items()>=0.1 and classe.items()==2.0:
+            p=vlc.MediaPlayer("mixkit-classic-alarm-995.wav")
+            p.play()
+            counter+=1
     img=np.squeeze(results.render())
     imgarr=Image.fromarray(img)
     imgtk=ImageTk.PhotoImage(imgarr)
     vid.imgtk=imgtk  #associate the imgtk image with the vid object.
     vid.configure(image=imgtk)
     vid.after(10,detect)
+    counterlabel.configure(text=counter)
 
 
 detect()
